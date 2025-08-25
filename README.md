@@ -1,5 +1,5 @@
 # Joy2Win - XInput Support
-This project adds XInput support to the Joy2Win project made by Logan Gaillard and others (Both Joy-Cons only).
+This project adds XInput support (via https://pypi.org/project/vgamepad/) to the Joy2Win project made by Logan Gaillard and others (Both Joy-Cons only).
 By default it uses N's buttons layout - but you can customize it via config.ini! 
 
 For more information about original project please visit: https://github.com/Logan-Gaillard/Joy2Win.
