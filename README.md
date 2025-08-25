@@ -1,5 +1,5 @@
 # Joy2Win - XInput Support
-This project adds a XInput support to Joy2Win project made by Logan Gaillard and others (Both Joy-Cons only).
+This project adds XInput support to the Joy2Win project made by Logan Gaillard and others (Both Joy-Cons only).
 By default it uses N's buttons layout - but you can customize it via config.ini! 
 
 For more information about original project please visit: https://github.com/Logan-Gaillard/Joy2Win.
@@ -26,7 +26,7 @@ For more information about original project please visit: https://github.com/Log
         - Set 24 buttons or higher  
         - Restart your computer  
 
-6. Copy the `config-exemple.ini` file, rename it to `config.ini`, and edit it according to your needs.
+6. Copy the `config-example.ini` file, rename it to `config.ini`, and edit it according to your needs.
 
 7. Run the script :
     ```bash
