@@ -1,5 +1,6 @@
 import configparser
 import os
+import json
 
 class Config:
     _instance = None
@@ -10,7 +11,11 @@ class Config:
         "save_mac_address": False,
         "enable_dsu": False,
         "mouse_mode": 0,
-        "mac_address": "FFFFFFFFFFFF"
+        "mac_address": "FFFFFFFFFFFF",
+        "enable_xinput": 1,
+        "joysticks_deadzone": 4000,
+        "custom_controls_left": {},
+        "custom_controls_right": {}
     }
 
     def __new__(cls, config_path="config.ini"):
@@ -40,7 +45,11 @@ class Config:
             self.save_mac_address = section.get("save_mac_address", str(self.save_mac_address)).lower() == '1'
             self.enable_dsu = section.get("enable_dsu", str(self.enable_dsu)).lower() == '1'
             self.mouse_mode = int(section.get("mouse_mode", self.mouse_mode if self.mouse_mode == 0 or self.mouse_mode == 1 or self.mouse_mode == 2 else 0))
-        
+            self.enable_xinput = int(section.get("enable_xinput", self.enable_xinput))
+            self.joysticks_deadzone = int(section.get("joysticks_deadzone", self.joysticks_deadzone))
+            self.custom_controls_left = json.loads(section.get("custom_controls_left", self.custom_controls_left) or '{}')
+            self.custom_controls_right = json.loads(section.get("custom_controls_right", self.custom_controls_right) or '{}')
+            
             if "Bluetooth" in config_parser:
                 section = config_parser["Bluetooth"]
                 configMacAddress =  section.get("mac_address", self.mac_address)
@@ -64,5 +73,9 @@ class Config:
             "save_mac_address": self.save_mac_address,
             "enable_dsu": self.enable_dsu,
             "mouse_mode": self.mouse_mode,
-            "mac_address": self.mac_address
+            "mac_address": self.mac_address,
+            "enable_xinput": self.enable_xinput,
+            "joysticks_deadzone": self.joysticks_deadzone,
+            "custom_controls_left": self.custom_controls_left,
+            "custom_controls_right": self.custom_controls_right
         }

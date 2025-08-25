@@ -60,7 +60,7 @@ async def connect(device_controller):
         return None
 
 
-async def init_controller(name, side, orientation, controller=0):
+async def init_controller(name, side, orientation, controller=0, enable_xinput=0):
     print(f"Scanning for {name} {side}, press the sync button...")
     device = await scan_joycons()
 
@@ -72,8 +72,12 @@ async def init_controller(name, side, orientation, controller=0):
             print(f"{name} {side} connected successfully.")
 
             if controller == 0:
-                # Notify controller to handle both Joy-Cons, because the controller is connected
-                await handle_duo_joycons(client, side)
+                if enable_xinput == 1:
+                    # Notify controller to handle both Joy-Cons, because the controller is connected
+                    await handle_duo_joycons_xinput(client, side)
+                else:
+                    # Notify controller to handle both Joy-Cons, because the controller is connected
+                    await handle_duo_joycons(client, side)
 
             elif controller == 1:
                 await handle_single_joycon(client, side, orientation)
@@ -85,6 +89,22 @@ async def init_controller(name, side, orientation, controller=0):
             print(f"Failed to connect {name} {side}.")
     else:
         print(f"Joy-Con {name} {side} not found.")
+
+async def handle_duo_joycons_xinput(client, side):
+    from control_type.duo_joycon_xinput import notify_duo_joycons
+
+    async def notification_handler(sender, data): #Notification des données du controller
+        asyncio.create_task(notify_duo_joycons(client, side, data))
+
+    def response_handler(sender, data): #Notification des réponses aux commandes du controller
+        ControllerCommand().receive_response(client, data)
+
+    await client.start_notify(UUID_CMD_RESPONSE, response_handler) #Commencer à écouter les réponses aux commandes
+
+    await initSendControllerCmd(client, "Joy-Con") #Envoie des commandes d'initialisation au controller
+
+    await client.stop_notify(UUID_CMD_RESPONSE) # Nous avons plus besoin d'écouter les réponses aux commandes
+    await client.start_notify(UUID_NOTIFY, notification_handler) # Commencer à écouter les notifications des données du controller
 
 async def handle_duo_joycons(client, side):
     from control_type.duo_joycon import notify_duo_joycons
@@ -157,8 +177,10 @@ async def main():
             config['orientation'] = 0  # Default to vertical if invalid
 
         if config['controller'] == 0:
-            await init_controller("Joy-Con", "Left", config['orientation'], 0)
-            await init_controller("Joy-Con", "Right", config['orientation'], 0)
+            if config['enable_xinput'] == 1:
+                print("XInput enabled")
+            await init_controller("Joy-Con", "Left", config['orientation'], 0, config['enable_xinput'])
+            await init_controller("Joy-Con", "Right", config['orientation'], 0, config['enable_xinput'])
         elif config['controller'] == 1:
             await init_controller("Joy-Con", "Left", config['orientation'], 1)
         elif config['controller'] == 2:
