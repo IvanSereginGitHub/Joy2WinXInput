@@ -34,3 +34,9 @@ For more information about original project please visit: https://github.com/Log
     ```
 
 8. Follow the instructions displayed when the script starts.
+
+## TODO
+As of right now, certain features are not supported, not fully/properly working or are planned to be added:
+1. Vibration - small implementation originally (only on connection), will try to add support for that.
+2. Gyro (both ingame support and maybe custom emulating Left/Right stick?) - tricky right now since API is still unknown.
+3. Mouse improvements (currently it is both laggy and drifting).
